@@ -1,0 +1,31 @@
+# ============================================
+# STUDY.EXE // Git Ignore Rules
+# Protects personal data, temporary & cache files
+# ============================================
+
+# Personal Study Data & Local Backups
+study_data.json
+study_data_backup.json
+*.backup
+*.bak
+
+# Python Bytecode & Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# Operating System Files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+
+# IDE and Editor Directories
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Log files
+*.log

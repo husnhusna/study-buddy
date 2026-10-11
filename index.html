@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STUDY.EXE // Cyber Student Productivity Terminal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="scanlines-active">
+  <!-- Subtle CRT Scanlines Overlay -->
+  <div class="crt-overlay" aria-hidden="true"></div>
+
+  <!-- Main System Shell -->
+  <div class="terminal-shell">
+    
+    <!-- Top System Titlebar -->
+    <header class="sys-titlebar">
+      <div class="sys-branding">
+        <span class="sys-icon">💾</span>
+        <span class="sys-title">STUDY.EXE <span class="sys-ver">v1.0.99</span></span>
+        <span class="sys-badge">[STATUS: ONLINE]</span>
+      </div>
+      <div class="sys-meta">
+        <span class="sys-clock" id="sysClock" aria-label="Current system time">00:00:00</span>
+        <button id="toggleAudioBtn" class="retro-btn-icon" title="Toggle 8-Bit Sound FX" aria-label="Toggle retro audio effects">
+          <span id="audioIcon">🔊</span> <span class="hide-mobile">SOUND</span>
+        </button>
+        <button id="toggleScanlinesBtn" class="retro-btn-icon" title="Toggle CRT Scanline Effect" aria-label="Toggle scanlines">
+          <span>📺</span> <span class="hide-mobile">CRT</span>
+        </button>
+        <div class="window-controls" aria-hidden="true">
+          <span class="win-btn win-min">_</span>
+          <span class="win-btn win-max">□</span>
+          <span class="win-btn win-close">✕</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Application Frame -->
+    <div class="app-frame">
+      
+      <!-- Left Cyber Sidebar / Navigation -->
+      <nav class="app-sidebar" aria-label="System Navigation">
+        <div class="sidebar-header">
+          <div class="avatar-box">
+            <span class="avatar-glyph">👾</span>
+            <div class="avatar-text">
+              <span class="avatar-name">OPERATOR</span>
+              <span class="avatar-status">STUDY MODE ON</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="nav-buttons" role="tablist">
+          <button class="nav-tab active" role="tab" id="tabBtn-dashboard" aria-selected="true" aria-controls="view-dashboard" data-tab="dashboard">
+            <span class="tab-glyph">⚡</span>
+            <span class="tab-label">DASHBOARD</span>
+          </button>
+          <button class="nav-tab" role="tab" id="tabBtn-tasks" aria-selected="false" aria-controls="view-tasks" data-tab="tasks">
+            <span class="tab-glyph">📋</span>
+            <span class="tab-label">TASKS</span>
+            <span class="tab-count-badge" id="tasksBadge">0</span>
+          </button>
+          <button class="nav-tab" role="tab" id="tabBtn-revision" aria-selected="false" aria-controls="view-revision" data-tab="revision">
+            <span class="tab-glyph">📖</span>
+            <span class="tab-label">REVISION</span>
+          </button>
+          <button class="nav-tab" role="tab" id="tabBtn-timer" aria-selected="false" aria-controls="view-timer" data-tab="timer">
+            <span class="tab-glyph">⏱️</span>
+            <span class="tab-label">FOCUS TIMER</span>
+          </button>
+          <button class="nav-tab" role="tab" id="tabBtn-notes" aria-selected="false" aria-controls="view-notes" data-tab="notes">
+            <span class="tab-glyph">📝</span>
+            <span class="tab-label">QUICK NOTES</span>
+          </button>
+          <button class="nav-tab" role="tab" id="tabBtn-system" aria-selected="false" aria-controls="view-system" data-tab="system">
+            <span class="tab-glyph">💾</span>
+            <span class="tab-label">DATA & BACKUP</span>
+          </button>
+        </div>
+
+        <!-- Sidebar Telemetry / Fun retro status panel -->
+        <div class="sidebar-telemetry">
+          <div class="telemetry-row">
+            <span class="telem-label">SYS MEMORY:</span>
+            <span class="telem-val">LOCAL DISK</span>
+          </div>
+          <div class="telemetry-row">
+            <span class="telem-label">NET CONNECT:</span>
+            <span class="telem-val text-green">100% OFFLINE</span>
+          </div>
+          <div class="telemetry-bar-box">
+            <div class="telemetry-bar-fill" id="telemetryBar" style="width: 100%;"></div>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Main Content Viewport -->
+      <main class="app-viewport">
+        
+        <!-- ========================================== -->
+        <!-- VIEW 1: DASHBOARD                          -->
+        <!-- ========================================== -->
+        <section id="view-dashboard" class="tab-content active" role="tabpanel" aria-labelledby="tabBtn-dashboard">
+          
+          <div class="panel-header">
+            <h1 class="panel-heading"><span class="terminal-prefix">></span> DASHBOARD_OVERVIEW</h1>
+            <span class="panel-tag">// MISSION CONTROL</span>
+          </div>
+
+          <!-- Welcome Banner -->
+          <div class="cyber-card welcome-card">
+            <div class="welcome-glitch-border"></div>
+            <div class="welcome-content">
+              <div class="welcome-title-row">
+                <span class="welcome-tag">[SYSTEM INITIALIZED]</span>
+                <span class="welcome-date" id="welcomeDateStr">OCTOBER 11, 2026</span>
+              </div>
+              <h2 class="welcome-headline">WELCOME BACK, OPERATOR.</h2>
+              <p class="welcome-quote" id="encouragingQuote">"BYTE BY BYTE, YOU COMPILE SUCCESS. INITIALIZE YOUR FOCUS SESSIONS."</p>
+              <div class="welcome-actions">
+                <button class="retro-btn btn-neon" onclick="app.switchTab('tasks')">
+                  <span>➕ NEW TASK</span>
+                </button>
+                <button class="retro-btn btn-purple" onclick="app.switchTab('timer')">
+                  <span>⏱️ START FOCUS</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Metrics Grid -->
+          <div class="metrics-grid">
+            <div class="metric-card" onclick="app.switchTab('tasks')">
+              <div class="metric-icon">⏳</div>
+              <div class="metric-info">
+                <span class="metric-label">PENDING TASKS</span>
+                <span class="metric-val text-lime" id="statPendingTasks">0</span>
+              </div>
+            </div>
+
+            <div class="metric-card" onclick="app.switchTab('tasks')">
+              <div class="metric-icon">✅</div>
+              <div class="metric-info">
+                <span class="metric-label">COMPLETED TASKS</span>
+                <span class="metric-val text-cyan" id="statCompletedTasks">0</span>
+              </div>
+            </div>
+
+            <div class="metric-card" onclick="app.switchTab('tasks')">
+              <div class="metric-icon">⚠️</div>
+              <div class="metric-info">
+                <span class="metric-label">DUE SOON / OVERDUE</span>
+                <span class="metric-val text-pink" id="statDueSoonTasks">0</span>
+              </div>
+            </div>
+
+            <div class="metric-card" onclick="app.switchTab('revision')">
+              <div class="metric-icon">📖</div>
+              <div class="metric-info">
+                <span class="metric-label">TOPICS MASTERED</span>
+                <span class="metric-val text-purple" id="statRevisionCompleted">0</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dashboard Two-Column Section: Priorities & Quick Jump -->
+          <div class="dashboard-split">
+            <!-- Priorities Box -->
+            <div class="cyber-card split-col">
+              <div class="card-inner-header">
+                <h3><span class="text-lime">🎯</span> TODAY'S PRIORITIES & UPCOMING</h3>
+                <span class="badge-mini" id="prioritiesCount">0 ITEMS</span>
+              </div>
+              <div id="dashboardPrioritiesList" class="priorities-list">
+                <!-- Dynamically rendered -->
+              </div>
+            </div>
+
+            <!-- Mini Revision & Focus Progress -->
+            <div class="cyber-card split-col">
+              <div class="card-inner-header">
+                <h3><span class="text-purple">📊</span> REVISION HIGHLIGHTS</h3>
+                <button class="retro-btn-subtle" onclick="app.switchTab('revision')">VIEW ALL &rarr;</button>
+              </div>
+              <div id="dashboardRevisionSummary" class="revision-summary-box">
+                <!-- Dynamically rendered -->
+              </div>
+
+              <div class="card-inner-header mt-4">
+                <h3><span class="text-cyan">⏱️</span> FOCUS SESSIONS</h3>
+              </div>
+              <div class="focus-mini-banner">
+                <div class="focus-stat-row">
+                  <span>TODAY'S SESSIONS COMPLETED:</span>
+                  <span class="text-lime font-bold" id="dashFocusSessionsCount">0</span>
+                </div>
+                <button class="retro-btn btn-neon-outline full-width mt-2" onclick="app.switchTab('timer')">
+                  LAUNCH FOCUS SESSION [25 MIN]
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 2: TASK MANAGER                       -->
+        <!-- ========================================== -->
+        <section id="view-tasks" class="tab-content" role="tabpanel" aria-labelledby="tabBtn-tasks">
+          
+          <div class="panel-header">
+            <h1 class="panel-heading"><span class="terminal-prefix">></span> TASK_MANAGER.EXE</h1>
+            <span class="panel-tag">// ASSIGNMENT DISPATCHER</span>
+          </div>
+
+          <!-- Add Task Card / Form -->
+          <div class="cyber-card mb-4">
+            <div class="card-inner-header">
+              <h3><span>➕</span> CREATE NEW TASK</h3>
+              <span class="card-subtitle">SPECIFY PARAMETERS & INITIALIZE</span>
+            </div>
+
+            <form id="taskForm" class="cyber-form" novalidate>
+              <div class="form-row">
+                <div class="form-group flex-2">
+                  <label for="taskTitleInput">TASK TITLE <span class="req-star">*</span></label>
+                  <input type="text" id="taskTitleInput" class="retro-input" placeholder="e.g. Chapter 4 Problem Set, Biology Lab Report" required autocomplete="off">
+                  <span class="field-error" id="taskTitleError">Title is required.</span>
+                </div>
+
+                <div class="form-group flex-1">
+                  <label for="taskSubjectInput">SUBJECT / COURSE <span class="req-star">*</span></label>
+                  <input type="text" id="taskSubjectInput" class="retro-input" placeholder="e.g. MATH 101, CS 50, HISTORY" required autocomplete="off" list="subjectDatalist">
+                  <datalist id="subjectDatalist"></datalist>
+                  <span class="field-error" id="taskSubjectError">Subject is required.</span>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group flex-1">
+                  <label for="taskDueDateInput">DUE DATE <span class="req-star">*</span></label>
+                  <input type="date" id="taskDueDateInput" class="retro-input" required>
+                  <span class="field-error" id="taskDueDateError">Valid date required.</span>
+                </div>
+
+                <div class="form-group flex-1">
+                  <label for="taskPriorityInput">PRIORITY LEVEL <span class="req-star">*</span></label>
+                  <select id="taskPriorityInput" class="retro-select">
+                    <option value="high">HIGH [HOT PINK / URGENT]</option>
+                    <option value="medium" selected>MEDIUM [ELECTRIC PURPLE / NORMAL]</option>
+                    <option value="low">LOW [NEON LIME / RELAXED]</option>
+                  </select>
+                </div>
+
+                <div class="form-group btn-align">
+                  <button type="submit" class="retro-btn btn-neon full-width">
+                    <span>INITIALIZE TASK [ENTER]</span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!-- Task Filter & Search Bar -->
+          <div class="filter-bar">
+            <div class="filter-group">
+              <span class="filter-label">FILTER STATUS:</span>
+              <button class="retro-chip active" data-filter="all" id="filterBtn-all">ALL (<span id="countFilterAll">0</span>)</button>
+              <button class="retro-chip" data-filter="pending" id="filterBtn-pending">PENDING (<span id="countFilterPending">0</span>)</button>
+              <button class="retro-chip" data-filter="completed" id="filterBtn-completed">COMPLETED (<span id="countFilterCompleted">0</span>)</button>
+            </div>
+
+            <div class="filter-group">
+              <span class="filter-label">PRIORITY:</span>
+              <select id="priorityFilterSelect" class="retro-select-mini">
+                <option value="all">ALL PRIORITIES</option>
+                <option value="high">HIGH PRIORITY ONLY</option>
+                <option value="medium">MEDIUM PRIORITY ONLY</option>
+                <option value="low">LOW PRIORITY ONLY</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Task List Container -->
+          <div id="tasksListContainer" class="tasks-container">
+            <!-- Dynamically populated -->
+          </div>
+
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 3: EXAM REVISION PLANNER              -->
+        <!-- ========================================== -->
+        <section id="view-revision" class="tab-content" role="tabpanel" aria-labelledby="tabBtn-revision">
+          
+          <div class="panel-header">
+            <h1 class="panel-heading"><span class="terminal-prefix">></span> REVISION_PLANNER.EXE</h1>
+            <span class="panel-tag">// EXAM SYLLABUS TRACKER</span>
+          </div>
+
+          <!-- Add Subject Form -->
+          <div class="cyber-card mb-4">
+            <div class="card-inner-header">
+              <h3><span>📚</span> ADD REVISION SUBJECT</h3>
+              <span class="card-subtitle">CREATE A COURSE MODULE OR EXAM MODULE</span>
+            </div>
+
+            <form id="addSubjectForm" class="cyber-form inline-form" novalidate>
+              <div class="form-group flex-3">
+                <label for="subjectNameInput">SUBJECT / COURSE NAME <span class="req-star">*</span></label>
+                <input type="text" id="subjectNameInput" class="retro-input" placeholder="e.g. Linear Algebra, Organic Chemistry, World History" required autocomplete="off">
+                <span class="field-error" id="subjectNameError">Subject name cannot be empty.</span>
+              </div>
+              <div class="form-group flex-1 btn-align">
+                <button type="submit" class="retro-btn btn-purple full-width">
+                  <span>➕ ADD SUBJECT</span>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Subjects Container -->
+          <div id="subjectsContainer" class="subjects-container">
+            <!-- Dynamically rendered subject cards -->
+          </div>
+
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 4: FOCUS TIMER                        -->
+        <!-- ========================================== -->
+        <section id="view-timer" class="tab-content" role="tabpanel" aria-labelledby="tabBtn-timer">
+          
+          <div class="panel-header">
+            <h1 class="panel-heading"><span class="terminal-prefix">></span> FOCUS_TIMER.EXE</h1>
+            <span class="panel-tag">// POMODORO COGNITIVE ENGINE</span>
+          </div>
+
+          <div class="timer-viewport">
+            <div class="cyber-card timer-main-card">
+              
+              <!-- Timer Mode Selector -->
+              <div class="timer-mode-selector" role="group" aria-label="Timer Mode">
+                <button class="timer-mode-btn active" id="timerModeFocus" data-mode="focus">
+                  <span class="mode-icon">🧠</span> FOCUS [25 MIN]
+                </button>
+                <button class="timer-mode-btn" id="timerModeShort" data-mode="shortBreak">
+                  <span class="mode-icon">☕</span> SHORT BREAK [5 MIN]
+                </button>
+                <button class="timer-mode-btn" id="timerModeLong" data-mode="longBreak">
+                  <span class="mode-icon">🧘</span> LONG BREAK [15 MIN]
+                </button>
+              </div>
+
+              <!-- Retro Digital Display -->
+              <div class="timer-display-box">
+                <div class="timer-display-frame">
+                  <div class="timer-mode-label" id="timerCurrentModeLabel">CURRENT MODE: FOCUS TIME</div>
+                  <div class="timer-digits" id="timerDisplay">25:00</div>
+                  <div class="timer-status-subtext" id="timerStatusSubtext">[SYSTEM IDLE — PRESS START]</div>
+                </div>
+
+                <!-- Circular / Linear Progress Bar -->
+                <div class="timer-progress-track">
+                  <div class="timer-progress-fill" id="timerProgressFill" style="width: 100%;"></div>
+                </div>
+              </div>
+
+              <!-- Timer Controls -->
+              <div class="timer-controls">
+                <button id="timerStartBtn" class="retro-btn btn-neon btn-lg">
+                  <span id="timerStartIcon">▶</span> <span id="timerStartText">START SESSION</span>
+                </button>
+                <button id="timerResetBtn" class="retro-btn btn-pink btn-lg">
+                  <span>⏹</span> <span>RESET</span>
+                </button>
+              </div>
+
+              <!-- Timer Features & Session Tracker -->
+              <div class="timer-footer-stats">
+                <div class="stat-pill">
+                  <span class="pill-label">COMPLETED FOCUS BLOCKS:</span>
+                  <span class="pill-val text-lime" id="timerSessionsCounter">0</span>
+                </div>
+                <div class="stat-pill">
+                  <span class="pill-label">ACCURACY ENGINE:</span>
+                  <span class="pill-val text-cyan">BACKGROUND SLEEP IMMUNE</span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Focus Tips Retro Card -->
+            <div class="cyber-card timer-tips-card">
+              <div class="card-inner-header">
+                <h3><span>💡</span> SYSTEM FOCUS PROTOCOL</h3>
+              </div>
+              <ul class="retro-bullet-list">
+                <li><strong>25 Minutes Focus:</strong> Eliminate distractions, mute non-essential alerts, dive into one target.</li>
+                <li><strong>5 Minutes Recharge:</strong> Stand up, hydrate, stretch, let cognitive fatigue dissipate.</li>
+                <li><strong>Audio Synth:</strong> Built-in 8-bit chime alerts you when your session or break concludes.</li>
+                <li><strong>Background Tab Safe:</strong> This timer relies on absolute timestamps, so it never slows down if you switch tabs.</li>
+              </ul>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 5: QUICK NOTES                        -->
+        <!-- ========================================== -->
+        <section id="view-notes" class="tab-content" role="tabpanel" aria-labelledby="tabBtn-notes">
+          
+          <div class="panel-header">
+            <h1 class="panel-heading"><span class="terminal-prefix">></span> QUICK_NOTES.EXE</h1>
+            <span class="panel-tag">// SCRATCHPAD & LECTURE LOG</span>
+          </div>
+
+          <div class="notes-layout">
+            <!-- Left: Notes List & Search -->
+            <div class="cyber-card notes-sidebar-card">
+              <div class="card-inner-header">
+                <h3><span>📒</span> MEMORY LOGS</h3>
+                <button id="createNoteBtn" class="retro-btn btn-neon-sm">
+                  <span>➕ NEW NOTE</span>
+                </button>
+              </div>
+
+              <div class="notes-search-box">
+                <input type="text" id="notesSearchInput" class="retro-input-sm" placeholder="Search notes..." autocomplete="off">
+              </div>
+
+              <div id="notesListContainer" class="notes-nav-list" role="list">
+                <!-- Dynamically populated note list -->
+              </div>
+            </div>
+
+            <!-- Right: Note Editor -->
+            <div class="cyber-card notes-editor-card">
+              <div id="noteEditorEmptyState" class="note-editor-empty">
+                <div class="retro-terminal-prompt">
+                  <p class="text-lime">> NO NOTE SELECTED</p>
+                  <p class="text-dim">Choose a note from the left log or click [NEW NOTE] to create one.</p>
+                </div>
+              </div>
+
+              <div id="noteEditorContainer" class="note-editor-container hidden">
+                <div class="editor-header">
+                  <div class="form-group full-width mb-2">
+                    <label for="activeNoteTitleInput">NOTE TITLE</label>
+                    <input type="text" id="activeNoteTitleInput" class="retro-input editor-title-input" placeholder="Title of your note..." autocomplete="off">
+                  </div>
+                  <div class="editor-meta-bar">
+                    <span class="save-indicator" id="noteSaveIndicator">[AUTOSAVED]</span>
+                    <button id="deleteActiveNoteBtn" class="retro-btn btn-pink-sm" title="Delete this note">
+                      <span>🗑️ DELETE NOTE</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="editor-body">
+                  <label for="activeNoteContentInput" class="sr-only">Note Content</label>
+                  <textarea id="activeNoteContentInput" class="retro-textarea" placeholder="Type lecture takeaways, formulas, revision snippets, or ideas here... Changes auto-save automatically."></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 6: DATA & BACKUP (SYSTEM SETTINGS)    -->
+        <!-- ========================================== -->
+        <section id="view-system" class="tab-content" role="tabpanel" aria-labelledby="tabBtn-system">
+          
+          <div class="panel-header">
+            <h1 class="panel-heading"><span class="terminal-prefix">></span> SYSTEM_STORAGE.EXE</h1>
+            <span class="panel-tag">// LOCAL STORAGE & BACKUP VAULT</span>
+          </div>
+
+          <div class="system-grid">
+            
+            <!-- Storage Status -->
+            <div class="cyber-card">
+              <div class="card-inner-header">
+                <h3><span>💾</span> STORAGE INTEGRITY & STATS</h3>
+              </div>
+              <p class="card-text">STUDY.EXE operates 100% offline inside your browser's private <code class="code-highlight">localStorage</code>. No external servers or telemetry are ever contacted.</p>
+              
+              <div class="stats-table">
+                <div class="stat-row">
+                  <span class="stat-name">LOCAL STORAGE STATUS:</span>
+                  <span class="stat-status text-lime font-bold" id="sysStorageStatus">ONLINE & OPERATIONAL</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-name">STORED TASKS:</span>
+                  <span class="stat-status text-cyan" id="sysTasksCount">0 records</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-name">STORED REVISION SUBJECTS:</span>
+                  <span class="stat-status text-purple" id="sysSubjectsCount">0 records</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-name">STORED QUICK NOTES:</span>
+                  <span class="stat-status text-lime" id="sysNotesCount">0 records</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Export Backup -->
+            <div class="cyber-card">
+              <div class="card-inner-header">
+                <h3><span>📥</span> EXPORT DATA BACKUP</h3>
+              </div>
+              <p class="card-text">Save all your tasks, revision subjects, topics, and notes into an offline JSON backup file. Keep this backup safe or transfer it to another computer.</p>
+              
+              <button id="exportBackupBtn" class="retro-btn btn-neon full-width mt-3">
+                <span>DOWNLOAD JSON BACKUP FILE (.json)</span>
+              </button>
+            </div>
+
+            <!-- Import Backup -->
+            <div class="cyber-card">
+              <div class="card-inner-header">
+                <h3><span>📤</span> RESTORE / IMPORT BACKUP</h3>
+              </div>
+              <p class="card-text">Restore a previously saved <code class="code-highlight">study_exe_backup.json</code> file. The file is validated before importing to prevent corruption.</p>
+              
+              <div class="import-zone mt-3">
+                <input type="file" id="importFileInput" accept=".json" class="file-input-hidden">
+                <button id="triggerImportBtn" class="retro-btn btn-purple full-width">
+                  <span>SELECT & RESTORE BACKUP FILE</span>
+                </button>
+                <div id="importFeedback" class="import-feedback-text"></div>
+              </div>
+            </div>
+
+            <!-- Danger Zone: Reset Data -->
+            <div class="cyber-card border-danger">
+              <div class="card-inner-header">
+                <h3 class="text-pink"><span>⚠️</span> PURGE ALL DATA [RESET]</h3>
+              </div>
+              <p class="card-text">Wipe all tasks, notes, revision plans, and settings from this browser. This action is irreversible.</p>
+              
+              <button id="clearAllDataBtn" class="retro-btn btn-pink full-width mt-3">
+                <span>PURGE ALL LOCAL STORAGE DATA</span>
+              </button>
+            </div>
+
+          </div>
+
+        </section>
+
+      </main>
+    </div>
+
+    <!-- Retro System Footer / Status Bar -->
+    <footer class="sys-statusbar">
+      <div class="status-col">
+        <span class="status-led led-green" id="statusLed"></span>
+        <span class="status-text" id="statusTicker">READY // STUDY.EXE ALL SYSTEMS NORMAL</span>
+      </div>
+      <div class="status-col hide-mobile">
+        <span class="status-segment">[CPU: IDLE]</span>
+        <span class="status-segment">[STORAGE: LOCAL]</span>
+        <span class="status-segment text-purple">1990s CYBERCORE OS</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- In-Page Retro Modal / Notification Banner (Guaranteed alert for timer & dialogs) -->
+  <div id="retroModalOverlay" class="retro-modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="retro-modal-box">
+      <div class="modal-titlebar">
+        <span class="modal-title" id="modalTitle">[SYSTEM ALERT]</span>
+        <button class="win-btn win-close" id="modalCloseBtn" aria-label="Close dialog">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-icon-badge" id="modalIcon">🔔</div>
+        <div class="modal-message" id="modalMessage">Session completed!</div>
+      </div>
+      <div class="modal-actions" id="modalActions">
+        <button class="retro-btn btn-neon" id="modalConfirmBtn">ACKNOWLEDGE [OK]</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Script -->
+  <script src="script.js"></script>
+</body>
+</html>
